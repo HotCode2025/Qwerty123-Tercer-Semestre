@@ -1,0 +1,519 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg: #030a0e;
+    --panel: #0a1520;
+    --border: #0d3a4a;
+    --cyan: #00f5ff;
+    --cyan2: #00bcd4;
+    --green: #39ff14;
+    --red: #ff2d55;
+    --yellow: #ffe500;
+    --orange: #ff8c00;
+    --text: #cce8ef;
+    --muted: #3a7080;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "DM Sans", sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    overflow-x: hidden;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 245, 255, 0.015) 2px,
+            rgba(0, 245, 255, 0.015) 4px);
+    pointer-events: none;
+    z-index: 10;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(0, 245, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 245, 255, 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 580px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+}
+
+/* Header */
+.header {
+    text-align: center;
+}
+
+.header h1 {
+    font-family: "Bebas Neue", sans-serif;
+    font-size: clamp(2.4rem, 7vw, 3.8rem);
+    letter-spacing: 0.18em;
+    color: var(--cyan);
+    text-shadow:
+        0 0 30px rgba(0, 245, 255, 0.5),
+        0 0 60px rgba(0, 245, 255, 0.2);
+    line-height: 1;
+}
+
+.header p {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+/* Clock face */
+.clock-face {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 40px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    box-shadow:
+        0 0 40px rgba(0, 245, 255, 0.07),
+        inset 0 0 40px rgba(0, 0, 0, 0.4);
+    transition:
+        border-color 0.5s,
+        box-shadow 0.5s;
+}
+
+.clock-face.countdown-mode {
+    border-color: var(--orange);
+    box-shadow:
+        0 0 40px rgba(255, 140, 0, 0.2),
+        inset 0 0 40px rgba(0, 0, 0, 0.4);
+}
+
+.clock-face::before {
+    content: "SYS:CLOCK";
+    position: absolute;
+    top: 14px;
+    left: 18px;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    font-family: "Share Tech Mono", monospace;
+}
+
+.clock-face::after {
+    content: "";
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 10px var(--green);
+    animation: blink 1s step-start infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+.time-display {
+    font-family: "Share Tech Mono", monospace;
+    font-size: clamp(3rem, 13vw, 5.5rem);
+    letter-spacing: 0.06em;
+    color: var(--cyan);
+    text-shadow:
+        0 0 20px rgba(0, 245, 255, 0.6),
+        0 0 60px rgba(0, 245, 255, 0.2);
+    line-height: 1;
+    transition:
+        color 0.4s,
+        text-shadow 0.4s;
+}
+
+.time-display.countdown {
+    color: var(--orange);
+    text-shadow:
+        0 0 20px rgba(255, 140, 0, 0.7),
+        0 0 60px rgba(255, 140, 0, 0.3);
+}
+
+.time-display.stopped {
+    color: var(--red);
+    text-shadow: 0 0 20px rgba(255, 45, 85, 0.6);
+}
+
+.date-display {
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 10px;
+    font-family: "Share Tech Mono", monospace;
+}
+
+/* Mode badge */
+.mode-badge {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 4px 14px;
+    border-radius: 99px;
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    transition: all 0.4s;
+}
+
+.mode-badge.reloj-mode {
+    color: var(--cyan);
+    border-color: rgba(0, 245, 255, 0.3);
+    background: rgba(0, 245, 255, 0.05);
+}
+
+.mode-badge.count-mode {
+    color: var(--orange);
+    border-color: rgba(255, 140, 0, 0.4);
+    background: rgba(255, 140, 0, 0.08);
+    animation: pulse-badge 0.8s ease infinite alternate;
+}
+
+.mode-badge.stopped-mode {
+    color: var(--red);
+    border-color: rgba(255, 45, 85, 0.3);
+    background: rgba(255, 45, 85, 0.05);
+}
+
+@keyframes pulse-badge {
+    from {
+        opacity: 0.7;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* Tabs */
+.tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+}
+
+.tab-btn {
+    padding: 11px 6px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--muted);
+}
+
+.tab-btn.active-tab {
+    border-color: var(--cyan);
+    color: var(--cyan);
+    background: rgba(0, 245, 255, 0.07);
+    box-shadow: 0 0 12px rgba(0, 245, 255, 0.1);
+}
+
+.tab-btn:hover:not(.active-tab) {
+    color: var(--text);
+    border-color: #1a5a6a;
+}
+
+/* Panels */
+.panel-wrap {
+    width: 100%;
+}
+
+.panel {
+    display: none;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.panel.active {
+    display: flex;
+}
+
+/* Info card */
+.info-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.76rem;
+    color: var(--muted);
+    line-height: 1.8;
+}
+
+.info-card span {
+    color: var(--cyan);
+}
+
+.info-card .hl-orange {
+    color: var(--orange);
+}
+
+.info-card .hl-green {
+    color: var(--green);
+}
+
+/* Bar */
+.bar-wrap {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 22px;
+}
+
+.bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-family: "Share Tech Mono", monospace;
+}
+
+.bar-label .count {
+    color: var(--yellow);
+}
+
+.bar-track {
+    background: rgba(0, 245, 255, 0.06);
+    border-radius: 99px;
+    height: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--cyan2), var(--cyan));
+    box-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+    transition:
+        width 0.9s linear,
+        background 0.5s;
+}
+
+.bar-fill.ending {
+    background: linear-gradient(90deg, var(--red), #ff6b6b);
+    box-shadow: 0 0 10px rgba(255, 45, 85, 0.5);
+}
+
+.bar-fill.orange {
+    background: linear-gradient(90deg, var(--orange), #ffb347);
+    box-shadow: 0 0 10px rgba(255, 140, 0, 0.5);
+}
+
+.bar-fill.stopped {
+    background: var(--muted);
+    box-shadow: none;
+    width: 0% !important;
+}
+
+/* Log */
+.log-wrap {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+}
+
+.log-title {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-family: "Share Tech Mono", monospace;
+}
+
+.log-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 160px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+}
+
+.log-list li {
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.76rem;
+    color: #3a8a70;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.log-list li::before {
+    content: ">";
+    color: var(--cyan);
+}
+
+.log-list li.stopped-log {
+    color: var(--red);
+}
+
+.log-list li.stopped-log::before {
+    content: "■";
+    color: var(--red);
+}
+
+.log-list li.count-log {
+    color: var(--orange);
+}
+
+.log-list li.count-log::before {
+    content: "⚡";
+    color: var(--orange);
+}
+
+.log-list li.midnight-log {
+    color: var(--yellow);
+}
+
+.log-list li.midnight-log::before {
+    content: "★";
+    color: var(--yellow);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Controls */
+.controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    width: 100%;
+}
+
+.btn {
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    font-family: "DM Sans", sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-start {
+    background: rgba(0, 245, 255, 0.08);
+    color: var(--cyan);
+    border-color: rgba(0, 245, 255, 0.3);
+}
+
+.btn-start:hover:not(:disabled) {
+    background: rgba(0, 245, 255, 0.18);
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.15);
+}
+
+.btn-stop {
+    background: rgba(255, 45, 85, 0.08);
+    color: var(--red);
+    border-color: rgba(255, 45, 85, 0.3);
+}
+
+.btn-stop:hover:not(:disabled) {
+    background: rgba(255, 45, 85, 0.18);
+    box-shadow: 0 0 20px rgba(255, 45, 85, 0.15);
+}
+
+.btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.status-badge {
+    font-family: "Share Tech Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    text-align: center;
+}
+
+.status-badge span {
+    color: var(--green);
+}
+
+.status-badge span.off {
+    color: var(--red);
+}
+
+.status-badge span.warn {
+    color: var(--orange);
+}
+.Preguntas {
+    margin-top: 20px;
+    text-align: center;
+    font-family: "Share Tech Mono", monospace;
+    font-size: 1.2rem;
+    color: var(--text);
+    line-height: 1.8;
+}

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PiedraPapelTijera</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // ─── Configuración ──────────────────────────────────────────────
+        const opciones = [
+            { nombre: 'Piedra', emoji: '🪨' },
+            { nombre: 'Papel', emoji: '📄' },
+            { nombre: 'Tijera', emoji: '✂️' },
+        ];
+
+        let puntajeJugador = 0;
+        let puntajeCPU = 0;
+
+        // ─── Función principal con la fórmula solicitada ─────────────────
+        /**
+         * Genera un número entero aleatorio entre min y max (inclusive).
+         * Fórmula: Math.floor(Math.random() * (max - min + 1) + min)
+         *
+         * @param {number} min - Valor mínimo
+         * @param {number} max - Valor máximo
+         * @returns {number} Número entero aleatorio
+         */
+        function randomEntre(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+
+        // ─── Lógica del juego ────────────────────────────────────────────
+        function play(indiceJugador) {
+            // CPU elige usando la fórmula (0 a 2)
+            const indiceCPU = randomEntre(0, 2);
+
+            const jugador = opciones[indiceJugador];
+            const cpu = opciones[indiceCPU];
+
+            // Actualizar emojis en arena
+            animarCarta('playerCard', 'playerEmoji', jugador.emoji);
+            animarCarta('cpuCard', 'cpuEmoji', cpu.emoji);
+
+            // Determinar resultado
+            // 0=Piedra, 1=Papel, 2=Tijera
+            // Piedra gana a Tijera, Papel gana a Piedra, Tijera gana a Papel
+            const resultado = (indiceJugador - indiceCPU + 3) % 3;
+            // resultado === 0 → empate
+            // resultado === 1 → jugador gana
+            // resultado === 2 → CPU gana
+
+            const msgEl = document.getElementById('resultMsg');
+            const playerCard = document.getElementById('playerCard');
+            const cpuCard = document.getElementById('cpuCard');
+
+            // Limpiar clases previas
+            playerCard.className = 'arena-card';
+            cpuCard.className = 'arena-card';
+            msgEl.className = 'result-msg';
+
+            if (resultado === 0) {
+                msgEl.textContent = '¡Empate!';
+                msgEl.classList.add('draw');
+                playerCard.classList.add('draw');
+                cpuCard.classList.add('draw');
+            } else if (resultado === 1) {
+                puntajeJugador++;
+                msgEl.textContent = `¡Ganaste! ${jugador.nombre} vence a ${cpu.nombre}`;
+                msgEl.classList.add('win');
+                playerCard.classList.add('winner');
+                cpuCard.classList.add('loser');
+            } else {
+                puntajeCPU++;
+                msgEl.textContent = `¡Perdiste! ${cpu.nombre} vence a ${jugador.nombre}`;
+                msgEl.classList.add('lose');
+                cpuCard.classList.add('winner');
+                playerCard.classList.add('loser');
+            }
+
+            actualizarMarcador();
+        }
+
+        // ─── Animación de carta ──────────────────────────────────────────
+        function animarCarta(cardId, emojiId, nuevoEmoji) {
+            const card = document.getElementById(cardId);
+            const emoji = document.getElementById(emojiId);
+            card.classList.remove('shaking');
+            emoji.classList.remove('pop');
+            // Trigger reflow para reiniciar animación
+            void card.offsetWidth;
+            emoji.textContent = nuevoEmoji;
+            card.classList.add('shaking');
+            emoji.classList.add('pop');
+        }
+
+        // ─── Actualizar marcador ─────────────────────────────────────────
+        function actualizarMarcador() {
+            document.getElementById('playerScore').textContent = puntajeJugador;
+            document.getElementById('cpuScore').textContent = puntajeCPU;
+        }
+
+        // ─── Reiniciar ───────────────────────────────────────────────────
+        function resetGame() {
+            puntajeJugador = 0;
+            puntajeCPU = 0;
+            actualizarMarcador();
+
+            document.getElementById('playerEmoji').textContent = '❓';
+            document.getElementById('cpuEmoji').textContent = '❓';
+            document.getElementById('playerCard').className = 'arena-card';
+            document.getElementById('cpuCard').className = 'arena-card';
+
+            const msg = document.getElementById('resultMsg');
+            msg.textContent = '¡Elige una opción!';
+            msg.className = 'result-msg';
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>PIEDRA <span>·</span><br>PAPEL<br><span>·</span> TIJERA</h1>
+        <p class="subtitle">Elige tu arma</p>
+
+        <!-- Scoreboard -->
+        <div class="scoreboard">
+            <div class="score-block">
+                <div class="score-label">Tú</div>
+                <div class="score-num player" id="playerScore">0</div>
+            </div>
+            <div class="score-vs">VS</div>
+            <div class="score-block">
+                <div class="score-label">CPU</div>
+                <div class="score-num cpu" id="cpuScore">0</div>
+            </div>
+        </div>
+
+        <!-- Arena -->
+        <div class="arena">
+            <div class="arena-card" id="playerCard">
+                <span class="arena-emoji" id="playerEmoji">❓</span>
+                <span class="arena-who">Tú</span>
+            </div>
+            <div class="arena-vs">⚡</div>
+            <div class="arena-card" id="cpuCard">
+                <span class="arena-emoji" id="cpuEmoji">❓</span>
+                <span class="arena-who">CPU</span>
+            </div>
+        </div>
+
+        <!-- Result -->
+        <div class="result-msg" id="resultMsg">¡Elige una opción!</div>
+
+        <!-- Choices -->
+        <div class="choices">
+            <button class="choice-btn" onclick="play(0)">
+                <span class="emoji">🪨</span>
+                <span class="label">Piedra</span>
+            </button>
+            <button class="choice-btn" onclick="play(1)">
+                <span class="emoji">📄</span>
+                <span class="label">Papel</span>
+            </button>
+            <button class="choice-btn" onclick="play(2)">
+                <span class="emoji">✂️</span>
+                <span class="label">Tijera</span>
+            </button>
+        </div>
+
+        <button class="reset-btn" onclick="resetGame()">↺ Reiniciar partida</button>
+    </div>
+
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reloj</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<script>
+    // ════════════════════════════════════════════════════════
+    //  UTILIDADES
+    // ════════════════════════════════════════════════════════
+
+    function log(listaId, msg, tipo = 'normal') {
+        const lista = document.getElementById(listaId);
+        const li = document.createElement('li');
+        if (tipo === 'stop') li.classList.add('stopped-log');
+        if (tipo === 'count') li.classList.add('count-log');
+        if (tipo === 'midnight') li.classList.add('midnight-log');
+        li.textContent = msg;
+        lista.prepend(li);
+    }
+
+    function setClockDisplay(horaStr, fechaStr) {
+        document.getElementById('timeDisplay').textContent = horaStr;
+        document.getElementById('dateDisplay').textContent = fechaStr;
+    }
+
+    function setClockClass(cls) {
+        document.getElementById('timeDisplay').className = 'time-display' + (cls ? ' ' + cls : '');
+    }
+
+    function setModeBadge(txt, cls) {
+        const b = document.getElementById('modeBadge');
+        b.textContent = txt;
+        b.className = 'mode-badge ' + cls;
+    }
+
+    function setClockFace(mode) {
+        const face = document.getElementById('clockFace');
+        face.className = 'clock-face' + (mode === 'countdown' ? ' countdown-mode' : '');
+    }
+
+    function setBtns(startId, stopId, running) {
+        document.getElementById(startId).disabled = running;
+        document.getElementById(stopId).disabled = !running;
+    }
+
+    function setEstado(spanId, txt, cls = '') {
+        const el = document.getElementById(spanId);
+        el.textContent = txt;
+        el.className = cls;
+    }
+
+    function tiempoHastaMedianoche() {
+        const now = new Date();
+        const total = 24 * 3600;
+        const atual = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+        return total - atual; // segundos restantes
+    }
+
+    function segsAString(segs) {
+        const hh = Math.floor(segs / 3600);
+        const mm = Math.floor((segs % 3600) / 60);
+        const ss = segs % 60;
+        return `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`;
+    }
+
+    // ════════════════════════════════════════════════════════
+    //  TABS
+    // ════════════════════════════════════════════════════════
+
+    function switchTab(tab) {
+        ['reloj', 'demo'].forEach(t => {
+            document.getElementById('panel-' + t).classList.toggle('active', t === tab);
+        });
+        document.querySelectorAll('.tab-btn').forEach((b, i) => {
+            b.classList.toggle('active-tab', ['reloj', 'demo'][i] === tab);
+        });
+    }
+
+    // ════════════════════════════════════════════════════════
+    //  PANEL 1 — RELOJ NORMAL (setInterval cada 1 minuto)
+    // ════════════════════════════════════════════════════════
+
+    let relojInterval = null;
+
+    function iniciarReloj() {
+        if (relojInterval) return;
+        setBtns('btnStartReloj', 'btnStopReloj', true);
+        setEstado('statusReloj', 'ACTIVO', '');
+        setClockClass('');
+        setClockFace('');
+        setModeBadge('RELOJ ACTIVO', 'reloj-mode');
+        log('logReloj', 'Reloj iniciado — intervalo: 1 minuto ▶');
+
+        // Mostrar hora inmediatamente al iniciar
+        tick();
+
+        // ── setInterval cada 60 segundos ──────────────────────────────
+        relojInterval = setInterval(function tick_() {
+            tick();
+        }, 60000);
+
+        function tick() {
+            const fecha = new Date();
+            const horaStr = fecha.toLocaleTimeString('es-AR');
+            const fechaStr = fecha.toLocaleDateString('es-AR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+            setClockDisplay(horaStr, fechaStr);
+
+            const restantes = tiempoHastaMedianoche();
+            const pct = (restantes / (24 * 3600)) * 100;
+            const bar = document.getElementById('relojBar');
+            bar.style.width = pct + '%';
+            bar.classList.remove('ending', 'orange', 'stopped');
+            if (pct < 5) bar.classList.add('ending');
+            document.getElementById('relojCount').textContent = segsAString(restantes);
+
+            log('logReloj', `La hora actual es: ${horaStr}`);
+            console.log(`La hora actual es: ${horaStr}`);
+
+            // ── Detener al llegar a medianoche ────────────────────────
+            if (fecha.getHours() === 0 && fecha.getMinutes() === 0) {
+                clearInterval(relojInterval);
+                relojInterval = null;
+                console.log('El reloj se ha detenido: llegó a 00:00');
+                log('logReloj', 'El reloj se ha detenido: llegó a 00:00', 'stop');
+                setClockClass('stopped');
+                setBtns('btnStartReloj', 'btnStopReloj', false);
+                setEstado('statusReloj', 'DETENIDO', 'off');
+                setModeBadge('DETENIDO', 'stopped-mode');
+                bar.classList.add('stopped');
+                document.getElementById('relojCount').textContent = '00:00:00';
+            }
+        }
+    }
+
+    function detenerReloj() {
+        if (relojInterval) { clearInterval(relojInterval); relojInterval = null; }
+        log('logReloj', 'El reloj se ha detenido manualmente', 'stop');
+        console.log('El reloj se ha detenido manualmente');
+        setClockClass('stopped');
+        setClockFace('');
+        setBtns('btnStartReloj', 'btnStopReloj', false);
+        setEstado('statusReloj', 'DETENIDO', 'off');
+        setModeBadge('DETENIDO', 'stopped-mode');
+        const bar = document.getElementById('relojBar');
+        bar.classList.add('stopped');
+    }
+
+    // ════════════════════════════════════════════════════════
+    //  PANEL 2 — DEMO: monitor 1min → countdown 10s automático
+    // ════════════════════════════════════════════════════════
+
+    let demoMonitorInterval = null;   // setInterval cada 1 min
+    let demoCountdownInterval = null; // setInterval cada 1s (se activa solo)
+    let demoAutoStop = null;          // setTimeout de 10s
+    let countdownSegs = 10;
+
+    function iniciarDemo() {
+        if (demoMonitorInterval) return;
+        setBtns('btnStartDemo', 'btnStopDemo', true);
+        setEstado('statusDemo', 'MONITOREANDO', 'warn');
+        setClockClass('');
+        setClockFace('');
+        setModeBadge('MONITOR ACTIVO', 'reloj-mode');
+        document.getElementById('countdownWrap').style.display = 'none';
+        log('logDemo', 'Monitor iniciado — verificando cada 1 minuto ▶');
+
+        // Mostrar hora al iniciar
+        tickMonitor();
+
+        // ── setInterval principal: cada 1 minuto ──────────────────────
+        demoMonitorInterval = setInterval(function () {
+            tickMonitor();
+        }, 60000);
+
+        function tickMonitor() {
+            const fecha = new Date();
+            const horaStr = fecha.toLocaleTimeString('es-AR');
+            const fechaStr = fecha.toLocaleDateString('es-AR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+            setClockDisplay(horaStr, fechaStr);
+
+            const restantes = tiempoHastaMedianoche();
+            const pct = (restantes / (24 * 3600)) * 100;
+            const bar = document.getElementById('demoBar');
+            bar.style.width = pct + '%';
+            bar.classList.remove('ending', 'orange', 'stopped');
+            if (pct < 5) bar.classList.add('ending');
+            document.getElementById('demoCount').textContent = segsAString(restantes);
+
+            log('logDemo', `La hora actual es: ${horaStr}`);
+            console.log(`La hora actual es: ${horaStr}`);
+
+            // ── ¿Faltan exactamente ≤ 10 segundos para medianoche? ──────
+            // (con margen porque el intervalo de 1min no es exacto al segundo)
+            if (restantes <= 10 && !demoCountdownInterval) {
+                activarCountdown(restantes);
+            }
+        }
+    }
+
+    // ── Se activa AUTOMÁTICAMENTE cuando el monitor detecta ≤10s ────
+    function activarCountdown(segsRestantes) {
+        clearInterval(demoMonitorInterval);
+        demoMonitorInterval = null;
+
+        countdownSegs = segsRestantes;
+        document.getElementById('countdownWrap').style.display = 'block';
+        setClockClass('countdown');
+        setClockFace('countdown');
+        setModeBadge('⚡ COUNTDOWN ACTIVO', 'count-mode');
+        setEstado('statusDemo', 'COUNTDOWN 10s', 'warn');
+
+        log('logDemo', `¡Faltan ${segsRestantes}s para medianoche! Countdown activado ⚡`, 'count');
+        console.log(`¡Faltan ${segsRestantes}s para medianoche! Countdown activado`);
+
+        // ── setInterval de 1 segundo para el countdown ───────────────
+        demoCountdownInterval = setInterval(function () {
+            const fecha = new Date();
+            const horaStr = fecha.toLocaleTimeString('es-AR');
+            const fechaStr = fecha.toLocaleDateString('es-AR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+            setClockDisplay(horaStr, fechaStr);
+
+            countdownSegs = Math.max(0, countdownSegs - 1);
+            const pct = (countdownSegs / 10) * 100;
+            const cbar = document.getElementById('countdownBar');
+            cbar.style.width = pct + '%';
+            document.getElementById('countdownCount').textContent = countdownSegs + 's';
+
+            log('logDemo', `La hora actual es: ${horaStr}`, 'count');
+            console.log(`La hora actual es: ${horaStr}`);
+        }, 1000);
+
+        // ── setTimeout: detiene todo al llegar la medianoche ─────────
+        demoAutoStop = setTimeout(function () {
+            clearInterval(demoCountdownInterval);
+            demoCountdownInterval = null;
+            demoAutoStop = null;
+
+            console.log('El reloj se ha detenido: ¡Medianoche!');
+            log('logDemo', '★ ¡Medianoche! El reloj se ha detenido', 'midnight');
+
+            setClockClass('stopped');
+            setClockFace('');
+            setModeBadge('MEDIANOCHE', 'stopped-mode');
+            setBtns('btnStartDemo', 'btnStopDemo', false);
+            setEstado('statusDemo', 'DETENIDO', 'off');
+
+            const cbar = document.getElementById('countdownBar');
+            cbar.classList.add('stopped');
+            document.getElementById('countdownCount').textContent = '0s';
+            document.getElementById('demoCount').textContent = '00:00:00';
+        }, countdownSegs * 1000);
+    }
+
+    function detenerDemo() {
+        if (demoMonitorInterval) { clearInterval(demoMonitorInterval); demoMonitorInterval = null; }
+        if (demoCountdownInterval) { clearInterval(demoCountdownInterval); demoCountdownInterval = null; }
+        if (demoAutoStop) { clearTimeout(demoAutoStop); demoAutoStop = null; }
+
+        log('logDemo', 'El reloj se ha detenido manualmente', 'stop');
+        console.log('El reloj se ha detenido manualmente');
+        setClockClass('stopped');
+        setClockFace('');
+        setModeBadge('DETENIDO', 'stopped-mode');
+        setBtns('btnStartDemo', 'btnStopDemo', false);
+        setEstado('statusDemo', 'DETENIDO', 'off');
+
+        const bar = document.getElementById('demoBar');
+        bar.classList.add('stopped');
+        const cbar = document.getElementById('countdownBar');
+        cbar.classList.add('stopped');
+    }
+</script>
+
+<body>
+    <div class="container">
+
+        <div class="header">
+            <h1>RELOJ DIGITAL</h1>
+            <p>setInterval · setTimeout · clearInterval</p>
+        </div>
+
+        <!-- Clock (siempre visible) -->
+        <div class="clock-face" id="clockFace">
+            <div class="time-display" id="timeDisplay">--:--:--</div>
+            <div class="date-display" id="dateDisplay">Seleccioná un modo y presioná INICIAR</div>
+            <div class="mode-badge" id="modeBadge">EN ESPERA</div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active-tab" onclick="switchTab('reloj')">🕐 Reloj normal</button>
+            <button class="tab-btn" onclick="switchTab('demo')">⚡ Demo 10s + Medianoche</button>
+        </div>
+
+        <!-- Panels -->
+        <div class="panel-wrap">
+
+            <!-- PANEL 1: Reloj normal -->
+            <div class="panel active" id="panel-reloj">
+                <div class="info-card">
+                    <span>setInterval</span> cada <span class="hl-green">1 minuto</span> → actualiza la hora para no
+                    sobrecargar el navegador.<br>
+                    Al detectar <span class="hl-orange">00:00:xx</span>, llama a <span>clearInterval</span> y el reloj
+                    se detiene.
+                </div>
+                <div class="bar-wrap">
+                    <div class="bar-label">
+                        <span>Tiempo hasta medianoche</span>
+                        <span class="count" id="relojCount">--:--:--</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill" id="relojBar" style="width:100%"></div>
+                    </div>
+                </div>
+                <div class="log-wrap">
+                    <div class="log-title">// Consola · Reloj (cada 1 min)</div>
+                    <ul class="log-list" id="logReloj"></ul>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-start" id="btnStartReloj" onclick="iniciarReloj()">▶ Iniciar</button>
+                    <button class="btn btn-stop" id="btnStopReloj" onclick="detenerReloj()" disabled>■ Detener</button>
+                </div>
+                <div class="status-badge">ESTADO: <span id="statusReloj">INACTIVO</span></div>
+            </div>
+
+            <!-- PANEL 2: Demo 10s activado automáticamente al faltar 10s para medianoche -->
+            <div class="panel" id="panel-demo">
+                <div class="info-card">
+                    <span>setInterval</span> cada <span class="hl-green">1 minuto</span> monitorea la hora.<br>
+                    Cuando faltan exactamente <span class="hl-orange">10 segundos</span> para las <span
+                        class="hl-orange">00:00:00</span>, activa automáticamente un nuevo <span>setInterval</span> de
+                    <span class="hl-orange">1 segundo</span>.<br>
+                    <span>setTimeout</span> de <span class="hl-orange">10s</span> llama a <span>clearInterval</span> al
+                    llegar la medianoche.
+                </div>
+
+                <!-- Barra minuto a minuto -->
+                <div class="bar-wrap">
+                    <div class="bar-label">
+                        <span>Monitor (cada 1 min)</span>
+                        <span class="count" id="demoCount">--:--:--</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill" id="demoBar" style="width:100%"></div>
+                    </div>
+                </div>
+
+                <!-- Barra countdown 10s (oculta hasta activarse) -->
+                <div class="bar-wrap" id="countdownWrap" style="display:none; border-color: rgba(255,140,0,0.4);">
+                    <div class="bar-label">
+                        <span>⚡ COUNTDOWN ACTIVO</span>
+                        <span class="count" id="countdownCount" style="color:var(--orange)">10s</span>
+                    </div>
+                    <div class="bar-track">
+                        <div class="bar-fill orange" id="countdownBar" style="width:100%"></div>
+                    </div>
+                </div>
+
+                <div class="log-wrap">
+                    <div class="log-title">// Consola · Demo</div>
+                    <ul class="log-list" id="logDemo"></ul>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-start" id="btnStartDemo" onclick="iniciarDemo()">▶ Iniciar</button>
+                    <button class="btn btn-stop" id="btnStopDemo" onclick="detenerDemo()" disabled>■ Detener</button>
+                </div>
+                <div class="status-badge">ESTADO: <span id="statusDemo">INACTIVO</span></div>
+            </div>
+
+        </div>
+    </div>
+        <section class="Preguntas">
+        <h2>Como se desactiva el entorno virtual en Python?</h2>
+        <p>Para desactivar un entorno virtual en Python, puedes usar el comando <code>deactivate</code> en tu terminal o línea de comandos. Simplemente escribe <code>deactivate</code> y presiona Enter, y el entorno virtual se desactivará, devolviéndote al entorno global de Python.
+        Sabrás que el entorno se ha desactivado correctamente porque el nombre del entorno entre paréntesis, por ejemplo (myenv), desaparecerá del principio de tu línea de comandos</p>
+        <h2>Que es el DOM?</h2>
+        <p>El DOM (Modelo de Objeto de Documento) es una interfaz de programación para documentos HTML y XML. Representa la estructura de un documento como un árbol de objetos, permitiendo a los scripts y aplicaciones interactuar con el contenido, la estructura y el estilo de los documentos web.</p>
+    </section>
+</body>
+
+</html>
