@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reloj en vivo</title>
+</head>
+<body>
+
+  <h1 id="hora"></h1>
+  <h2 id="fecha"></h2>
+
+  <script>
+    function actualizarReloj() {
+      const ahora = new Date();
+
+      // Hora
+      const hora = ahora.toLocaleTimeString();
+
+      // Fecha
+      const fecha = ahora.toLocaleDateString('es-AR', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+
+      // DOM
+      document.getElementById("hora").textContent = hora;
+      document.getElementById("fecha").textContent = fecha;
+    }
+
+    // Actualiza cada segundo
+    setInterval(actualizarReloj, 1000);
+
+    // Mostrar apenas carga
+    actualizarReloj();
+  </script>
+
+</body>
+</html>
