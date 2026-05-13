@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PiedraPapelTijera</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
     <script>
         // ─── Configuración ──────────────────────────────────────────────
         const opciones = [
@@ -18,14 +18,14 @@
         let puntajeCPU = 0;
 
         // ─── Función principal con la fórmula solicitada ─────────────────
-        /**
-         * Genera un número entero aleatorio entre min y max (inclusive).
-         * Fórmula: Math.floor(Math.random() * (max - min + 1) + min)
-         *
-         * @param {number} min - Valor mínimo
-         * @param {number} max - Valor máximo
-         * @returns {number} Número entero aleatorio
-         */
+        /***
+        Genera un número entero aleatorio entre min y max (inclusive).
+        Fórmula: Math.floor(Math.random() * (max - min + 1) + min)
+        
+        @param {number} min - Valor mínimo
+        @param {number} max - Valor máximo
+        @returns {number} Número entero aleatorio
+         ***/
         function randomEntre(min, max) {
             return Math.floor(Math.random() * (max - min + 1) + min);
         }
@@ -50,11 +50,19 @@
             // resultado === 1 → jugador gana
             // resultado === 2 → CPU gana
 
+            /***
+            getElementById busca el elemento en el HTML de la misma página,
+            específicamente dentro del document (que representa todo el documento HTML cargado en el navegador).
+             ***/
             const msgEl = document.getElementById('resultMsg');
             const playerCard = document.getElementById('playerCard');
             const cpuCard = document.getElementById('cpuCard');
 
             // Limpiar clases previas
+            /***
+             * y las className a que hace referencia?
+            Las className hacen referencia a las clases CSS que están definidas en el <style> de la misma página.
+             ***/ 
             playerCard.className = 'arena-card';
             cpuCard.className = 'arena-card';
             msgEl.className = 'result-msg';
