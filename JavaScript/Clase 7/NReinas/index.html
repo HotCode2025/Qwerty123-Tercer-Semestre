@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Desafío de las N Reinas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="header-aplicacion">
+        <h1 id="titulo">👑 El Desafío de las N Reinas</h1>
+    </header>
+
+    <div class="contenedor-controles">
+        <label for="valorN">Cantidad de Reinas (N):</label>
+        <input type="number" id="valorN" min="8" value="8">
+        <button onclick="iniciar()">Resolver</button>
+    </div>
+
+    <div id="tablero"></div>
+    <div id="resultado"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
