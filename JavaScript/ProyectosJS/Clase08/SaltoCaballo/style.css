@@ -1,0 +1,137 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+    background: radial-gradient(circle at top, #f8fafc 0%, #e2e8f0 100%);
+    color: #1e293b;
+    margin: 0;
+    padding: 20px 20px 40px 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.header-aplicacion {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+    padding: 15px 30px;
+    border-radius: 50px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+}
+
+#titulo {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0;
+    background: linear-gradient(to right, #0f172a, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.contenedor-controles {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    padding: 12px 25px;
+    border-radius: 30px;
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 35px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03);
+}
+
+.contenedor-controles label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+input[type="number"] {
+    width: 60px;
+    padding: 6px 10px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border: 2px solid #cbd5e1;
+    background-color: #f1f5f9;
+    color: #64748b;
+    border-radius: 20px;
+    text-align: center;
+    outline: none;
+}
+
+button {
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    padding: 8px 22px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+#tablero {
+    display: grid;
+    justify-content: center;
+    margin: 20px auto;
+    border: 10px solid #475569;
+    border-radius: 16px;
+    width: fit-content;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.12);
+    background-color: #475569;
+    overflow: hidden;
+}
+
+.casilla {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+.blanca {
+    background-color: #f0d9b5;
+}
+
+.negra {
+    background-color: #b58863;
+}
+
+/* Estilo para las X de rastro (Paso 1 al 63) */
+.rastro {
+    font-size: 26px;
+    font-weight: bold;
+    color: rgba(15, 23, 42, 0.65); /* Un tono oscuro traslúcido para que resalte en ambos fondos */
+}
+
+/* Estilo destacado para el Caballo en su posición FINAL (Paso 64) */
+.caballo-actual {
+    font-size: 44px; /* Caballo notablemente más grande */
+    color: #000000;
+    filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.4));
+}
+
+#resultado {
+    margin-top: 35px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #0f172a;
+    background: #ffffff;
+    display: inline-block;
+    padding: 12px 30px;
+    border-radius: 30px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    max-width: 85%;
+    line-height: 1.6;
+}
