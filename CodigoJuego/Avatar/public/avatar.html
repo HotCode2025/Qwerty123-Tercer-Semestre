@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LA LEYENDA DE AANG: AVATAR</title>
+    
+</head>
+<body>
+    <h1>AVATAR 🔥💧🌎🌪️</h1>
+
+    <section id="seleccionar-personaje">
+        <h2>Elige tu Personaje</h2>
+
+        <label for="zuko">Zuko</label>
+        <input type="radio" name="personaje" id="zuko"/>
+        
+        <label for="katara">Katara</label>
+        <input type="radio" name="personaje" id="katara"/>
+        
+        <label for="aang">Aang</label>
+        <input type="radio" name="personaje" id="aang"/>
+        
+        <label for="toph">Toph</label>
+        <input type="radio" name="personaje" id="toph"/>
+        
+
+        <button id="boton-personaje">Seleccionar</button> <!-- El botón para seleccionar personajes-->
+    </section>
+    <section id="seleccionar-ataque">
+        <h2>Elige tu ataque</h2> <!-- Se puede utilizar varias veces-->
+        <p>Tu personaje <span id="personaje-jugador"></span> tiene <span>3</span> vidas</p> <!-- Pero esto debe ser dinámico, necesitamos que cambie-->
+        <p>El personaje <span id="personaje-enemigo"></span> del enemigo tiene <span>3</span> vidas</p> <!-- Con la etiqueta span vamos a modificar el 3 con JS-->
+        <p>
+            <button id="boton-punio">Punio 👊 </button>
+            <button id="boton-patada">Patada 🦵 </button>
+            <button id="boton-barrida">Barrida 🧹 </button>
+        </p>
+    </section>
+    <section id="mensajes">
+        <p>Tu personaje atacó con todo el poder del FUEGO, el personaje del enemigo atacó con el medio poder de la TIERRA - GANASTE 🎉</p>
+    </section>
+    <section id="reiniciar">
+        <button id="boton-reiniciar">Reiniciar</button>
+
+    </section>
+    <!--/* Aquí va mi comentario css -->
+    <script src="./js/avatar.js"></script>
+</body>
+</html>
