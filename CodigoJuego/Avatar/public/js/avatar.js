@@ -11,7 +11,7 @@ function iniciarJuego(){
     let botonPatada = document.getElementById('boton-patada')
     botonPatada.addEventListener('click', ataquePatada)
 
-    let botonbarrida = document.getElementById('boton-barrida')
+    let botonBarrida = document.getElementById('boton-barrida')
     botonBarrida.addEventListener('click', ataqueBarrida)
 }
 
@@ -79,7 +79,36 @@ function ataqueAleatorioEnemigo(){
     } else {
         ataqueEnemigo = 'Barrida'
     }
+    combate()
 }
+
+function combate(){
+    
+    if (ataqueJugador == ataqueEnemigo) {
+        crearMensaje("¡EMPATE! 🤝");
+    } 
+    
+    else if (ataqueJugador == 'Punio' && ataqueEnemigo == 'Barrida') {
+        crearMensaje("¡GANASTE! 👊 vence a 🧹");
+    } else if (ataqueJugador == 'Patada' && ataqueEnemigo == 'Punio') {
+        crearMensaje("¡GANASTE! 🦵 vence a 👊");
+    } else if (ataqueJugador == 'Barrida' && ataqueEnemigo == 'Patada') {
+        crearMensaje("¡GANASTE! 🧹 vence a 🦵")
+    } else {
+        crearMensaje("¡PERDISTE! 😢");
+    }
+
+}
+
+function crearMensaje(resultado){
+    let sectionMensaje = document.getElementById('mensaje')
+    let parrafo = document.createElement('p')
+
+    parrafo.innerHTML = 'Tu personaje atacó con '+ ataqueJugador +', el personaje del enemigo atacó con '+ ataqueEnemigo +' ' + resultado
+    sectionMensaje.appendChild(parrafo)
+
+}
+
 
 function aleatorio(min, max){
     return Math.floor(Math.random() * (max - min + 1) + min)
