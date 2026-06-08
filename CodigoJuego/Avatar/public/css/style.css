@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+/* ESTILOS GENERALES Y FONDO CLARO/ALEGRE */
+body {
+    font-family: 'Nunito', sans-serif;
+    margin: 0;
+    padding: 0;
+    /* Degradado luminoso y alegre inspirado en la serie */
+    background: linear-gradient(135deg, #e0f2fe, #fef08a); 
+    color: #1e293b;
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding-bottom: 50px;
+}
+
+/* TÍTULO PRINCIPAL (Ligeramente más chico) */
+.titulo-principal {
+    text-align: center;
+    color: #1e3a8a; 
+    font-size: 3.2rem; /* Achicado de 3.8rem */
+    margin: 25px 0; /* Menos espacio arriba y abajo */
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
+    letter-spacing: 2px;
+}
+
+/* CONTENEDOR PRINCIPAL */
+.contenedor-principal {
+    display: flex;
+    justify-content: center;
+    gap: 70px; 
+    max-width: 1350px; 
+    margin: 0 auto;
+    padding: 0 30px;
+    align-items: stretch;
+}
+
+/* DISEÑO DE LAS TARJETAS (Menos padding para ganar espacio) */
+.tarjeta {
+    flex: 1;
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 25px 35px; /* Reducido para que entre más contenido */
+    box-shadow: 0 10px 30px rgba(30, 41, 59, 0.1); 
+    min-height: 75vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h2 {
+    color: #1e3a8a;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 10px;
+    margin-top: 0;
+    font-size: 1.4rem; /* Letras un poco más chicas */
+}
+
+/* SECCIÓN: SELECCIÓN DE PERSONAJES */
+.opciones-personaje {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.opcion-radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.opcion-radio label {
+    font-size: 1.15rem; /* Achicado apenas */
+    font-weight: 700;
+    color: #334155;
+    cursor: pointer;
+}
+
+.opcion-radio input[type="radio"] {
+    transform: scale(1.2); 
+    cursor: pointer;
+}
+
+#seleccionar-personaje {
+    margin-bottom: 30px; /* Reducido para juntar con la sección de abajo */
+    display: flex;
+    flex-direction: column;
+}
+
+/* BOTÓN SELECCIONAR (Más chico y centrado) */
+.boton-primario {
+    background-color: #2563eb;
+    color: white;
+    margin: 20px auto 0 auto; /* Centrado horizontalmente */
+    display: block;
+    font-size: 1rem; /* Achicado */
+    padding: 10px 25px; /* Más compacto */
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+    cursor: pointer;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.boton-primario:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.3);
+}
+
+/* TEXTOS DE VIDAS */
+#seleccionar-ataque p {
+    margin: 10px 0;
+    font-size: 0.95rem;
+}
+
+/* BOTONES DE ATAQUE (Más chicos y redondeados) */
+.botones-ataque {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.boton-ataque {
+    background-color: #f8fafc;
+    color: #334155;
+    border: 2px solid #e2e8f0;
+    font-size: 0.95rem; /* Achicado */
+    padding: 8px 15px; /* Más compacto */
+    border-radius: 20px; /* BORDES MÁS REDONDEADOS */
+    flex: 1; 
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.boton-ataque:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateY(-2px);
+}
+
+/* SECCIÓN MENSAJES */
+#mensaje {
+    margin-top: 15px;
+    font-size: 0.95rem;
+}
+
+/* BOTÓN REINICIAR (Centrado, despegado y empujado al fondo) */
+#reiniciar {
+    margin-top: auto; /* Empuja la sección completa hacia el final de la tarjeta */
+    text-align: center; /* Centra el botón que está adentro */
+    padding-top: 30px; /* Asegura que esté despegado de los mensajes/ataques */
+}
+
+.boton-secundario {
+    background-color: #ef4444;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 12px;
+    cursor: pointer;
+    border: none;
+    font-family: 'Nunito', sans-serif;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.boton-secundario:hover {
+    background-color: #dc2626;
+}
+
+/* TEXTOS DE BIENVENIDA Y LISTAS EN REGLAS */
+.texto-bienvenida h3 {
+    color: #2563eb;
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+}
+
+.texto-bienvenida p {
+    color: #64748b;
+    margin-top: 0;
+    font-size: 1rem;
+}
+
+.lista-pasos {
+    padding-left: 20px;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.lista-ventajas {
+    padding: 0;
+    list-style: none;
+}
+
+.lista-ventajas li {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    padding: 10px 15px;
+    background-color: #f8fafc;
+    border-radius: 12px;
+    border-left: 5px solid #2563eb;
+}
+
+.nota-empate {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-top: auto; 
+    text-align: center;
+}
