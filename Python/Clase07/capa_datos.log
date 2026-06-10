@@ -1,0 +1,55 @@
+05:32:37 PM:DEBUG {logger_base.py:12} mensaje aa nivel debug
+05:32:37 PM:INFO {logger_base.py:13} Mensaje a nivel info
+05:32:37 PM:WARNING {logger_base.py:14} Mensaje a nivel warning
+05:32:37 PM:ERROR {logger_base.py:15} Mensaje a nivel error
+05:32:37 PM:CRITICAL {logger_base.py:16} Mensaje a nivel critical
+05:54:11 PM:DEBUG {Persona.py:55} 
+            Id_Persona: 1,
+            Nombre: Juan,
+            Apellido: Perez,
+            Email: jperez@mail.com
+        
+05:57:26 PM:DEBUG {Persona.py:55} 
+            Id_Persona: 1,
+            Nombre: Juan,
+            Apellido: Perez,
+            Email: jperez@mail.com
+        
+05:58:03 PM:DEBUG {Persona.py:55} 
+            Id_Persona: 1,
+            Nombre: Juan,
+            Apellido: Perez,
+            Email: jperez@mail.com
+        
+05:59:43 PM:DEBUG {Persona.py:55} 
+            Id_Persona: 1,
+            Nombre: Juan,
+            Apellido: Perez,
+            Email: jperez@mail.com
+        
+05:59:43 PM:DEBUG {Persona.py:57} 
+            Id_Persona: Jose,
+            Nombre: Lopez,
+            Apellido: ljose@mail.com,
+            Email: None
+        
+06:06:16 PM:DEBUG {Persona.py:55} 
+            Id_Persona: 1,
+            Nombre: Juan,
+            Apellido: Perez,
+            Email: jperez@mail.com
+        
+06:06:16 PM:DEBUG {Persona.py:57} 
+            Id_Persona: Jose,
+            Nombre: Lopez,
+            Apellido: ljose@mail.com,
+            Email: None
+        
+06:06:16 PM:DEBUG {Persona.py:59} 
+            Id_Persona: 1,
+            Nombre: None,
+            Apellido: None,
+            Email: None
+        
+07:56:16 PM:ERROR {conection.py:31} Ocurrió un error al conectar a la base de datos: 'utf-8' codec can't decode byte 0xab in position 90: invalid start byte
+07:57:20 PM:ERROR {conexion.py:31} Ocurrió un error al conectar a la base de datos: 'utf-8' codec can't decode byte 0xab in position 90: invalid start byte
