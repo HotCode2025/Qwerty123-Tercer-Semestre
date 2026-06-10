@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Leyenda de Aang: Avatar</title>
+    <script src="./Avatar.js"></script>
+</head>
+
+<body>
+    <section id="seleccionar-personaje">
+        <h2>Seleccionar Personaje</h2>
+        <input type="radio" name="personaje" id="aang" value="Aang">
+        <label for="aang">Aang</label>
+
+        <input type="radio" name="personaje" id="katara" value="Katara">
+        <label for="katara">Katara</label>
+
+        <input type="radio" name="personaje" id="zuko" value="Zuko">
+        <label for="zuko">Zuko</label>
+
+        <input type="radio" name="personaje" id="toph" value="Toph">
+        <label for="toph">Toph</label>
+
+        <button id="boton-personaje">Seleccionar</button>
+    </section>
+
+    <section id="seleccionar-ataque">
+        <h2>Seleccionar Ataque</h2>
+        <p>Tu personaje <span id="personaje-seleccionado"></span> tiene <span>3</span> vidas</p>
+        <p>El personaje <span id="enemigo-seleccionado"></span> tiene <span>3</span> vidas</p>
+
+        <p id="ataque-seleccionado">
+            <button id="boton-fuego">Fuego</button>
+            <button id="boton-agua">Agua</button>
+            <button id="boton-aire">Aire</button>
+            <button id="boton-tierra">Tierra</button>
+        </p>
+    </section>
+
+    <section id="mensajes">
+        <p>tu personaje ataco con todo el poder de "<span id="ataque-seleccionado"></span>"</p>
+    </section>
+
+    <section id="reiniciar">
+        <button id="boton-reiniciar">Reiniciar</button>
+    </section>
+
+
+</body>
+
+</html>
