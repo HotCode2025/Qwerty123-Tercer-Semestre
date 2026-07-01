@@ -4,6 +4,15 @@ Descripción: Punto de entrada del juego Batalla Naval.
              Controla el menú principal, el flujo de partida y el resultado final.
 """
 
+import sys
+from enum import Enum, auto
+
+from dominio.jugadores      import Jugadores
+from dominio.tablero        import Tablero
+from utilidades.ranking     import Ranking
+from utilidades.utilidades  import Utilidades
+from utilidades.db          import inicializar_db, guardar_partida
+
 
 # ------------------------------------------------------------------ #
 #  Estado de finalización de partida                                  #
